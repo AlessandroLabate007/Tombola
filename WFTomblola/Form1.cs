@@ -8,12 +8,43 @@ namespace WFTomblola;
 public partial class Form1 : Form
 {
     CTombola gioco = new CTombola();
-    
+    MqttManager _net;
+    string _nomeGiocatore = "Giocatore_" + Random.Shared.Next(100, 999);
+    int vinto = 0;
+    int numero;
 
     public Form1()
     {
         InitializeComponent();
         InizializzaTabellaDinamica();
+        ConfiguraRete();
+        label33.Click += label33_Click;
+        label33.Cursor = Cursors.Hand;
+    }
+
+    private void ConfiguraRete()
+    {
+        // Ripristino broker funzionante per laptop
+        _net = new MqttManager("broker.emqx.io", _nomeGiocatore);
+
+
+        _net.OnNumeroRicevuto += (num) =>
+        {
+            this.Invoke((MethodInvoker)delegate {
+                gioco.numero = num;
+                label3.Text = num.ToString();
+            });
+        };
+
+        _net.OnMessaggioRicevuto += (msg) =>
+        {
+            this.Invoke((MethodInvoker)delegate {
+                label32.Text = msg;
+                Task.Delay(3000).ContinueWith(_ => {
+                    this.Invoke((MethodInvoker)delegate { label32.Text = ""; });
+                });
+            });
+        };
     }
 
     private void InizializzaTabellaDinamica()
@@ -54,11 +85,16 @@ public partial class Form1 : Form
     {
         if (sender is Label lbl)
         {
-            if (gioco.numero == Int32.Parse(lbl.Text))
+            
+            if (vinto == 14)
+                label32.Text = "HAI VINTO!";
+            
+            if (gioco.numero == Int32.Parse(lbl.Text) && vinto < 15)
             {
                 var pos = tableLayoutPanel1.GetCellPosition(lbl);
                 int r = pos.Row;
                 int c = pos.Column;
+                vinto++;
 
                 if (lbl.BackColor == Color.OrangeRed)
                 {
@@ -78,24 +114,47 @@ public partial class Form1 : Form
                     if (!string.IsNullOrEmpty(vincita))
                     {
                         label32.Text = vincita;
+                        _net.InviaVincita(_nomeGiocatore, vincita); // Invia a tutti!
                         await Task.Delay(1500);
                         label32.Text = "";
                     }
                 }
             }
+            
             else
             {
-                label32.Text = "NON BARARE!";
-                await Task.Delay(1500);
-                label32.Text = "";
+                // Se il numero è stato già estratto, permetti di segnarlo (recupero)
+                int valoreLabel = Int32.Parse(lbl.Text);
+                if (CTombola.verifica[valoreLabel] != 0)
+                {
+                    var pos = tableLayoutPanel1.GetCellPosition(lbl);
+                    lbl.BackColor = Color.OrangeRed;
+                    lbl.ForeColor = Color.White;
+                    gioco.Segna(pos.Row, pos.Column, true);
+                    
+                    string vincita = gioco.ControllaVincita(pos.Row);
+                    if (!string.IsNullOrEmpty(vincita))
+                    {
+                        label32.Text = vincita;
+                        _net.InviaVincita(_nomeGiocatore, vincita);
+                        await Task.Delay(1500);
+                        label32.Text = "";
+                    }
+                }
+                else
+                {
+                    label32.Text = "NON BARARE!";
+                    await Task.Delay(1500);
+                    label32.Text = "";
+                }
             }
         }
     }
 
-    private void button1_Click(object sender, EventArgs e)
+    private async void button1_Click(object sender, EventArgs e)
     {
         gioco.GeneraNumero();
-        
+
         if (gioco.numero == -1)
         {
             label3.Text = "Fine";
@@ -103,13 +162,31 @@ public partial class Form1 : Form
         else
         {
             label3.Text = gioco.numero.ToString();
+            await _net.InviaNumero(gioco.numero); // Invia il numero agli altri
         }
     }
+
+    private async void label33_Click(object sender, EventArgs e)
+    {
+        try 
+        {
+            label33.Text = "IN CORSO...";
+            label33.ForeColor = Color.Orange;
+            await _net.Connetti();
+            label33.Text = "CONNESSO";
+            label33.ForeColor = Color.Green;
+        }
+        catch (Exception ex)
+        {
+            label33.Text = "ERRORE";
+            label33.ForeColor = Color.Red;
+            MessageBox.Show("Errore connessione: " + ex.Message + "\n\nDettagli: " + ex.InnerException?.Message);
+        }
+    }
+
 
     private void label5_Click(object sender, EventArgs e)
     {
         
     }
-    
-    
 }

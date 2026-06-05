@@ -64,6 +64,7 @@ partial class Form1
         label7 = new System.Windows.Forms.Label();
         label6 = new System.Windows.Forms.Label();
         label5 = new System.Windows.Forms.Label();
+        label33 = new System.Windows.Forms.Label();
         panel1.SuspendLayout();
         tableLayoutPanel1.SuspendLayout();
         SuspendLayout();
@@ -71,6 +72,7 @@ partial class Form1
         // panel1
         // 
         panel1.BackColor = System.Drawing.SystemColors.MenuHighlight;
+        panel1.Controls.Add(label33);
         panel1.Controls.Add(label32);
         panel1.Controls.Add(label4);
         panel1.Controls.Add(label3);
@@ -123,13 +125,14 @@ partial class Form1
         // 
         // button1
         // 
+        button1.BackColor = System.Drawing.Color.LightCoral;
         button1.Font = new System.Drawing.Font("Showcard Gothic", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)0));
         button1.Location = new System.Drawing.Point(12, 219);
         button1.Name = "button1";
         button1.Size = new System.Drawing.Size(147, 110);
         button1.TabIndex = 2;
         button1.Text = "GIRAAA!!";
-        button1.UseVisualStyleBackColor = true;
+        button1.UseVisualStyleBackColor = false;
         button1.Click += button1_Click;
         // 
         // label1
@@ -408,6 +411,16 @@ partial class Form1
         label5.TabIndex = 0;
         label5.Click += label5_Click;
         // 
+        // label33
+        // 
+        label33.Font = new System.Drawing.Font("Showcard Gothic", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)0));
+        label33.Location = new System.Drawing.Point(552, 40);
+        label33.Name = "label33";
+        label33.Size = new System.Drawing.Size(193, 92);
+        label33.TabIndex = 7;
+        label33.Text = "CONNETTI";
+        label33.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+        // 
         // Form1
         // 
         AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -419,6 +432,8 @@ partial class Form1
         tableLayoutPanel1.ResumeLayout(false);
         ResumeLayout(false);
     }
+
+    private System.Windows.Forms.Label label33;
 
     private System.Windows.Forms.Label label32;
 

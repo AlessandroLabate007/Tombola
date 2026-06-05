@@ -12,3 +12,7 @@ C:\Users\aless\RiderProjects\WFTomblola\WFTomblola\obj\Debug\net10.0-windows\ref
 C:\Users\aless\RiderProjects\WFTomblola\WFTomblola\obj\Debug\net10.0-windows\WFTomblola.pdb
 C:\Users\aless\RiderProjects\WFTomblola\WFTomblola\obj\Debug\net10.0-windows\WFTomblola.genruntimeconfig.cache
 C:\Users\aless\RiderProjects\WFTomblola\WFTomblola\obj\Debug\net10.0-windows\ref\WFTomblola.dll
+C:\Users\aless\RiderProjects\WFTomblola\WFTomblola\obj\Debug\net10.0-windows\WFTomblola.sourcelink.json
+C:\Users\aless\RiderProjects\WFTomblola\WFTomblola\obj\Debug\net10.0-windows\WFTomblola.csproj.AssemblyReference.cache
+C:\Users\aless\RiderProjects\WFTomblola\WFTomblola\bin\Debug\net10.0-windows\MQTTnet.dll
+C:\Users\aless\RiderProjects\WFTomblola\WFTomblola\obj\Debug\net10.0-windows\WFTomblola.csproj.Up2Date

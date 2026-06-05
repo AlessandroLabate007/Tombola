@@ -8,17 +8,18 @@ public class CTombola
     private int[,] _scheda = new int[3, 9];
     private bool[,] _segnati = new bool[3, 9];
     private int _numero;
-    private static int[] _verifica = new int[91];
+    public static int[] verifica = new int[91];
     private int[] _posizioni = new int[9]; 
     private static int _click;
-    public bool ambo, terna, quaterna, cinquina = false;
+    public static bool ambo, terna, quaterna, cinquina = false;
+    
 
     public CTombola()
     {
         _numero = 0;
         GeneraNuovaScheda();
     }
-    
+
     public int[,] scheda => _scheda;
 
     public void Segna(int r, int c, bool stato)
@@ -64,7 +65,14 @@ public class CTombola
         set
         {
             _numero = value;
-            GeneraNumero();
+            if (_numero >= 1 && _numero <= 90)
+            {
+                if (verifica[_numero] == 0)
+                {
+                    verifica[_numero] = _numero;
+                    _click++;
+                }
+            }
         }
     }
 
@@ -73,42 +81,50 @@ public class CTombola
         // 1. Reset della matrice
         Array.Clear(_scheda, 0, _scheda.Length);
 
-        // 2. Distribuzione dei 15 numeri nelle 9 colonne (Regola: min 1, max 3 per colonna)
-        for (int i = 0; i < 9; i++) _posizioni[i] = 1; 
-        int extra = 6; 
-        while (extra > 0)
+        // 2. Distribuzione dei 15 numeri nelle 9 colonne 
+        // Per avere 5 numeri per riga (5*3=15) con 9 colonne:
+        // Servono 4 colonne con 1 numero, 4 con 2 numeri e 1 con 3 numeri.
+        
+        int[] colTypes = { 1, 1, 1, 1, 2, 2, 2, 2, 3 };
+        // Mischiamo i tipi di colonna
+        for (int i = 0; i < 9; i++)
         {
-            int c = Random.Shared.Next(0, 9);
-            if (_posizioni[c] < 3) { _posizioni[c]++; extra--; }
+            int swapIdx = Random.Shared.Next(i, 9);
+            (colTypes[i], colTypes[swapIdx]) = (colTypes[swapIdx], colTypes[i]);
         }
 
-        // 3. Generazione numeri e posizionamento intelligente
+        // Distribuzione righe per le colonne con 2 numeri
+        // Vogliamo bilanciare: 2x (0,1), 1x (0,2), 1x (1,2)
+        int[][] pairPatterns = { new[] { 0, 1 }, new[] { 0, 1 }, new[] { 0, 2 }, new[] { 1, 2 } };
+        int pairIdx = 0;
+
+        // Distribuzione righe per le colonne con 1 numero
+        // Vogliamo bilanciare: 1x (0), 1x (1), 2x (2)
+        int[] singlePatterns = { 0, 1, 2, 2 };
+        int singleIdx = 0;
+
+        // 3. Generazione numeri e posizionamento
         for (int col = 0; col < 9; col++)
         {
-            int quantiInColonna = _posizioni[col];
+            int quantiInColonna = colTypes[col];
             List<int> numeri = GeneraNumeriPerColonna(col, quantiInColonna);
 
-            // Applichiamo le regole di posizionamento verticale
             if (quantiInColonna == 3)
             {
-                // Tre numeri: tutti in colonna (righe 0, 1, 2)
                 _scheda[0, col] = numeri[0];
                 _scheda[1, col] = numeri[1];
                 _scheda[2, col] = numeri[2];
             }
             else if (quantiInColonna == 2)
             {
-                // Due numeri: divisi da uno spazio (righe 0 e 2)
-                _scheda[0, col] = numeri[0];
-                _scheda[1, col] = 0; // Spazio vuoto
-                _scheda[2, col] = numeri[1];
+                int[] rows = pairPatterns[pairIdx++];
+                _scheda[rows[0], col] = numeri[0];
+                _scheda[rows[1], col] = numeri[1];
             }
             else if (quantiInColonna == 1)
             {
-                // Un numero: solo al centro (riga 1)
-                _scheda[0, col] = 0;
-                _scheda[1, col] = numeri[0];
-                _scheda[2, col] = 0;
+                int row = singlePatterns[singleIdx++];
+                _scheda[row, col] = numeri[0];
             }
         }
     }
@@ -132,9 +148,11 @@ public class CTombola
     {
         if (_click >= 90) { _numero = -1; return; }
         int nuovo;
-        do { nuovo = Random.Shared.Next(1, 91); } while (_verifica[nuovo] != 0);
-        _verifica[nuovo] = nuovo;
+        do { nuovo = Random.Shared.Next(1, 91); } while (verifica[nuovo] != 0);
+        verifica[nuovo] = nuovo;
         _numero = nuovo;
         _click++;
     }
+    
+    
 }

@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "P+c23wUMkBQ=",
+  "dgSpecHash": "TsCmwQhipzA=",
   "success": true,
   "projectFilePath": "C:\\Users\\aless\\RiderProjects\\WFTomblola\\WFTomblola\\WFTomblola.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\aless\\.nuget\\packages\\mqttnet\\4.3.7.1207\\mqttnet.4.3.7.1207.nupkg.sha512"
+  ],
   "logs": []
 }
