@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WFTomblola")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5d0c7ce1b1b6d02479c0672ed40d4504db673e66")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+71173e34944dd4f143b4a8303b26fb6a59a9be7c")]
 [assembly: System.Reflection.AssemblyProductAttribute("WFTomblola")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WFTomblola")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

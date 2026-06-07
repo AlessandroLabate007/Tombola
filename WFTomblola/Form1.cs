@@ -9,7 +9,7 @@ public partial class Form1 : Form
 {
     CTombola gioco = new CTombola();
     MqttManager _net;
-    string _nomeGiocatore = "Giocatore_" + Random.Shared.Next(100, 999);
+    string _nomeGiocatore = "Giocatore_" + Guid.NewGuid().ToString().Substring(0, 5);
     int vinto = 0;
     int numero;
 
@@ -24,7 +24,7 @@ public partial class Form1 : Form
 
     private void ConfiguraRete()
     {
-        // Ripristino broker funzionante per laptop
+        // Broker pubblico per permettere il gioco tra Italia e America
         _net = new MqttManager("broker.emqx.io", _nomeGiocatore);
 
 
